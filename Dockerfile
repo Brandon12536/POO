@@ -136,8 +136,11 @@ RUN echo '#!/bin/sh' > /start.sh \
     && echo '# Publicar y generar documentación Swagger' >> /start.sh \
     && echo 'echo "📚 Publicando assets de Swagger..."' >> /start.sh \
     && echo 'php artisan vendor:publish --provider="L5Swagger\\L5SwaggerServiceProvider" --force || echo "Swagger publish failed"' >> /start.sh \
-    && echo '# Configurar L5Swagger para permitir CDN externos' >> /start.sh \
+    && echo '# Configurar L5Swagger para permitir assets personalizados' >> /start.sh \
     && echo 'sed -i "s|\"ui_doc_expansion\" => \"none\"|\"ui_doc_expansion\" => \"list\"|g" /var/www/html/config/l5-swagger.php || echo "Config update failed"' >> /start.sh \
+    && echo 'sed -i "s|\"validate\" => true|\"validate\" => false|g" /var/www/html/config/l5-swagger.php || echo "Validation disable failed"' >> /start.sh \
+    && echo 'echo "🔓 Deshabilitando validación de assets L5Swagger..."' >> /start.sh \
+    && echo 'grep -n "validate.*false" /var/www/html/config/l5-swagger.php || echo "Validation still enabled"' >> /start.sh \
     && echo '# Copiar assets de Swagger UI localmente' >> /start.sh \
     && echo 'mkdir -p /var/www/html/public/vendor/swagger-ui' >> /start.sh \
     && echo 'curl -o /var/www/html/public/vendor/swagger-ui/swagger-ui-bundle.js https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui-bundle.js || echo "Bundle download failed"' >> /start.sh \
