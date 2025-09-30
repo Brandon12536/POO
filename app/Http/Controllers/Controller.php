@@ -9,7 +9,7 @@ namespace App\Http\Controllers;
  *     description="API para demostrar conceptos de OOP en Laravel"
  * )
  * @OA\Server(
- *     url="https://tu-dominio-produccion.com",
+ *     url="https://poo-yrit.onrender.com",
  *     description="Servidor de Producción"
  * )
  * @OA\Server(
