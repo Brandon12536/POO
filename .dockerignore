@@ -8,6 +8,9 @@ README.md
 README_SUPABASE_CRUD.md
 Markdown/
 
+# Docker configuration files (not needed, everything is inline)
+docker/
+
 # Development files
 .env.example
 .env.local

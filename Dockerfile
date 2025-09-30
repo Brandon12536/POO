@@ -1,10 +1,9 @@
-# Dockerfile para Laravel OOP + Supabase - Producción
+# Dockerfile simplificado para Laravel OOP + Supabase - Render.com
 FROM php:8.3-fpm-alpine
 
 # Instalar dependencias del sistema
 RUN apk add --no-cache \
     nginx \
-    supervisor \
     curl \
     zip \
     unzip \
@@ -43,14 +42,35 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 RUN addgroup -g 1000 -S laravel \
     && adduser -u 1000 -S laravel -G laravel
 
+# Configurar Nginx inline
+RUN echo 'user laravel;' > /etc/nginx/nginx.conf \
+    && echo 'worker_processes auto;' >> /etc/nginx/nginx.conf \
+    && echo 'pid /run/nginx.pid;' >> /etc/nginx/nginx.conf \
+    && echo 'events { worker_connections 1024; }' >> /etc/nginx/nginx.conf \
+    && echo 'http {' >> /etc/nginx/nginx.conf \
+    && echo '    include /etc/nginx/mime.types;' >> /etc/nginx/nginx.conf \
+    && echo '    default_type application/octet-stream;' >> /etc/nginx/nginx.conf \
+    && echo '    sendfile on;' >> /etc/nginx/nginx.conf \
+    && echo '    keepalive_timeout 65;' >> /etc/nginx/nginx.conf \
+    && echo '    gzip on;' >> /etc/nginx/nginx.conf \
+    && echo '    server {' >> /etc/nginx/nginx.conf \
+    && echo '        listen 80;' >> /etc/nginx/nginx.conf \
+    && echo '        root /var/www/html/public;' >> /etc/nginx/nginx.conf \
+    && echo '        index index.php index.html;' >> /etc/nginx/nginx.conf \
+    && echo '        location / { try_files $uri $uri/ /index.php?$query_string; }' >> /etc/nginx/nginx.conf \
+    && echo '        location ~ \.php$ {' >> /etc/nginx/nginx.conf \
+    && echo '            fastcgi_pass 127.0.0.1:9000;' >> /etc/nginx/nginx.conf \
+    && echo '            fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;' >> /etc/nginx/nginx.conf \
+    && echo '            include fastcgi_params;' >> /etc/nginx/nginx.conf \
+    && echo '        }' >> /etc/nginx/nginx.conf \
+    && echo '        location /health { return 200 "OK"; add_header Content-Type text/plain; }' >> /etc/nginx/nginx.conf \
+    && echo '        location = / { return 301 /api/documentation; }' >> /etc/nginx/nginx.conf \
+    && echo '    }' >> /etc/nginx/nginx.conf \
+    && echo '}' >> /etc/nginx/nginx.conf
+
 # Configurar directorios
 WORKDIR /var/www/html
 RUN chown -R laravel:laravel /var/www/html
-
-# Copiar archivos de configuración
-COPY docker/nginx.conf /etc/nginx/nginx.conf
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY docker/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Copiar código fuente
 COPY --chown=laravel:laravel . /var/www/html
@@ -61,23 +81,19 @@ USER laravel
 # Instalar dependencias PHP
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Optimizar Laravel para producción
-RUN php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache \
-    && php artisan l5-swagger:generate
-
-# Cambiar de vuelta a root para configurar servicios
+# Cambiar de vuelta a root
 USER root
 
-# Crear directorios necesarios
-RUN mkdir -p /var/log/supervisor \
-    && mkdir -p /run/nginx \
+# Crear directorios necesarios y configurar permisos
+RUN mkdir -p /run/nginx \
+    && mkdir -p /var/www/html/storage/logs \
+    && mkdir -p /var/www/html/storage/framework/cache \
+    && mkdir -p /var/www/html/storage/framework/sessions \
+    && mkdir -p /var/www/html/storage/framework/views \
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache \
     && chown -R laravel:laravel /var/www/html/storage \
     && chown -R laravel:laravel /var/www/html/bootstrap/cache
-
-# Exponer puerto
-EXPOSE 80
 
 # Variables de entorno por defecto
 ENV APP_ENV=production
@@ -87,5 +103,21 @@ ENV SESSION_DRIVER=file
 ENV CACHE_STORE=file
 ENV QUEUE_CONNECTION=sync
 
+# Exponer puerto
+EXPOSE 80
+
+# Script de inicio inline
+RUN echo '#!/bin/sh' > /start.sh \
+    && echo 'set -e' >> /start.sh \
+    && echo 'cd /var/www/html' >> /start.sh \
+    && echo 'php artisan config:clear || true' >> /start.sh \
+    && echo 'php artisan cache:clear || true' >> /start.sh \
+    && echo 'php artisan l5-swagger:generate || true' >> /start.sh \
+    && echo 'chown -R laravel:laravel /var/www/html/storage' >> /start.sh \
+    && echo 'chmod -R 775 /var/www/html/storage' >> /start.sh \
+    && echo 'php-fpm -D' >> /start.sh \
+    && echo 'nginx -g "daemon off;"' >> /start.sh \
+    && chmod +x /start.sh
+
 # Comando de inicio
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["/start.sh"]
