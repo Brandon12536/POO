@@ -9,6 +9,8 @@ Sistema completo de gestión de empleados que demuestra **todos los conceptos de
 
 **🏠 URL Local:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
+**🎨 Frontend Desplegado:** [https://sistemaempleados.netlify.app/](https://sistemaempleados.netlify.app/)
+
 ## ✨ Características principales
 - 🏗️ **Conceptos OOP reales**: Constructor, Métodos, Herencia, Excepciones, Interfaces, Clases Abstractas, $this y parent::
 - 🗄️ **Base de datos real**: Integración completa con Supabase PostgreSQL
