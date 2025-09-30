@@ -62,6 +62,8 @@ RUN echo 'user laravel;' > /etc/nginx/nginx.conf \
     && echo '            fastcgi_pass 127.0.0.1:9000;' >> /etc/nginx/nginx.conf \
     && echo '            fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;' >> /etc/nginx/nginx.conf \
     && echo '            include fastcgi_params;' >> /etc/nginx/nginx.conf \
+    && echo '            fastcgi_read_timeout 300;' >> /etc/nginx/nginx.conf \
+    && echo '            fastcgi_send_timeout 300;' >> /etc/nginx/nginx.conf \
     && echo '        }' >> /etc/nginx/nginx.conf \
     && echo '        location /health { return 200 "OK"; add_header Content-Type text/plain; }' >> /etc/nginx/nginx.conf \
     && echo '        location = / { return 301 /api/documentation; }' >> /etc/nginx/nginx.conf \
@@ -84,14 +86,15 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 # Cambiar de vuelta a root
 USER root
 
-# Crear directorios necesarios y configurar permisos
+# Crear directorios necesarios y configurar permisos correctos
 RUN mkdir -p /run/nginx \
     && mkdir -p /var/www/html/storage/logs \
     && mkdir -p /var/www/html/storage/framework/cache \
     && mkdir -p /var/www/html/storage/framework/sessions \
     && mkdir -p /var/www/html/storage/framework/views \
-    && chmod -R 775 /var/www/html/storage \
-    && chmod -R 775 /var/www/html/bootstrap/cache \
+    && mkdir -p /var/www/html/storage/app \
+    && chmod -R 777 /var/www/html/storage \
+    && chmod -R 777 /var/www/html/bootstrap/cache \
     && chown -R laravel:laravel /var/www/html/storage \
     && chown -R laravel:laravel /var/www/html/bootstrap/cache
 
@@ -106,16 +109,29 @@ ENV QUEUE_CONNECTION=sync
 # Exponer puerto
 EXPOSE 80
 
-# Script de inicio inline
+# Script de inicio mejorado inline
 RUN echo '#!/bin/sh' > /start.sh \
     && echo 'set -e' >> /start.sh \
+    && echo 'echo "🚀 Iniciando Laravel OOP + Supabase..."' >> /start.sh \
     && echo 'cd /var/www/html' >> /start.sh \
-    && echo 'php artisan config:clear || true' >> /start.sh \
-    && echo 'php artisan cache:clear || true' >> /start.sh \
-    && echo 'php artisan l5-swagger:generate || true' >> /start.sh \
+    && echo '# Configurar permisos correctos' >> /start.sh \
     && echo 'chown -R laravel:laravel /var/www/html/storage' >> /start.sh \
-    && echo 'chmod -R 775 /var/www/html/storage' >> /start.sh \
+    && echo 'chown -R laravel:laravel /var/www/html/bootstrap/cache' >> /start.sh \
+    && echo 'chmod -R 777 /var/www/html/storage' >> /start.sh \
+    && echo 'chmod -R 777 /var/www/html/bootstrap/cache' >> /start.sh \
+    && echo '# Generar APP_KEY si no existe' >> /start.sh \
+    && echo 'if [ -z "$APP_KEY" ]; then php artisan key:generate --force; fi' >> /start.sh \
+    && echo '# Limpiar caches' >> /start.sh \
+    && echo 'php artisan config:clear || echo "Config clear failed"' >> /start.sh \
+    && echo 'php artisan cache:clear || echo "Cache clear failed"' >> /start.sh \
+    && echo 'php artisan view:clear || echo "View clear failed"' >> /start.sh \
+    && echo '# Generar documentación' >> /start.sh \
+    && echo 'php artisan l5-swagger:generate || echo "Swagger generation failed"' >> /start.sh \
+    && echo 'echo "✅ Laravel configurado correctamente"' >> /start.sh \
+    && echo '# Iniciar servicios' >> /start.sh \
+    && echo 'echo "🔧 Iniciando PHP-FPM..."' >> /start.sh \
     && echo 'php-fpm -D' >> /start.sh \
+    && echo 'echo "🌐 Iniciando Nginx..."' >> /start.sh \
     && echo 'nginx -g "daemon off;"' >> /start.sh \
     && chmod +x /start.sh
 
