@@ -1,0 +1,53 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+README_SUPABASE_CRUD.md
+Markdown/
+
+# Development files
+.env.example
+.env.local
+.env.testing
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node modules (if any)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# PHP Storm
+.phpstorm.meta.php
+
+# Testing
+phpunit.xml
+.phpunit.result.cache
+tests/
+
+# Storage (will be mounted as volume)
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# Bootstrap cache
+bootstrap/cache/*
+
+# Vendor (will be installed during build)
+vendor/
+
+# Temporary files
+*.tmp
+*.temp

@@ -1,0 +1,772 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Laravel OOP Demo API",
+        "description": "API para demostrar conceptos de OOP en Laravel",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://tu-dominio-produccion.com",
+            "description": "Servidor de Producción"
+        },
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "Servidor Local"
+        }
+    ],
+    "paths": {
+        "/api/employees": {
+            "get": {
+                "tags": [
+                    "Employee CRUD"
+                ],
+                "summary": "Obtener todos los empleados",
+                "description": "Obtiene lista completa de empleados desde Supabase",
+                "operationId": "9887e2f12f56dfc0e8c450ebfc4235c3",
+                "responses": {
+                    "200": {
+                        "description": "Lista de empleados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 5
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Employee CRUD"
+                ],
+                "summary": "Crear nuevo empleado",
+                "description": "Crea un empleado en Supabase con validaciones OOP",
+                "operationId": "8615a8e8b4d85f9652265e929a1c5926",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Ana García"
+                                    },
+                                    "age": {
+                                        "type": "integer",
+                                        "example": 28
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "ana.garcia@empresa.com"
+                                    },
+                                    "salary": {
+                                        "type": "number",
+                                        "example": 75000
+                                    },
+                                    "position": {
+                                        "type": "string",
+                                        "example": "Desarrolladora Senior"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Empleado creado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Empleado creado exitosamente"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Datos inválidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/employees/{id}": {
+            "get": {
+                "tags": [
+                    "Employee CRUD"
+                ],
+                "summary": "Obtener empleado por ID",
+                "description": "Obtiene un empleado específico desde Supabase",
+                "operationId": "a2d2d41265cbce32d06dbb314debd172",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Empleado encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Empleado no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Empleado no encontrado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Employee CRUD"
+                ],
+                "summary": "Actualizar empleado",
+                "description": "Actualiza un empleado existente en Supabase",
+                "operationId": "73decaec2a06938575bd21308c78b05f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Ana García Actualizada"
+                                    },
+                                    "age": {
+                                        "type": "integer",
+                                        "example": 29
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "ana.garcia.nueva@empresa.com"
+                                    },
+                                    "salary": {
+                                        "type": "number",
+                                        "example": 80000
+                                    },
+                                    "position": {
+                                        "type": "string",
+                                        "example": "Tech Lead"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Empleado actualizado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Empleado actualizado exitosamente"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Employee CRUD"
+                ],
+                "summary": "Eliminar empleado",
+                "description": "Elimina un empleado de Supabase",
+                "operationId": "acde1b504fb1a5c7a555ac2f1b34daf8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Empleado eliminado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Empleado eliminado exitosamente"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/employees/statistics": {
+            "get": {
+                "tags": [
+                    "Employee CRUD"
+                ],
+                "summary": "Estadísticas de empleados",
+                "description": "Obtiene estadísticas calculadas de todos los empleados",
+                "operationId": "8163ee5b432c2528287bcd990e360a30",
+                "responses": {
+                    "200": {
+                        "description": "Estadísticas obtenidas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": {
+                                                "total_employees": 5,
+                                                "average_salary": 78000,
+                                                "average_age": 32.4,
+                                                "positions": {
+                                                    "Desarrollador": 2,
+                                                    "Gerente": 1
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/oop-demo": {
+            "get": {
+                "tags": [
+                    "OOP Demo"
+                ],
+                "summary": "Demostración completa de conceptos OOP",
+                "description": "Endpoint que demuestra todos los conceptos OOP con un ejemplo de empleado real",
+                "operationId": "af319fffaf3a6eb49cc137c7b069c8e1",
+                "responses": {
+                    "200": {
+                        "description": "Operación exitosa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "demo_title": {
+                                            "type": "string",
+                                            "example": "Sistema de Gestión de Empleados - Conceptos OOP"
+                                        },
+                                        "employee_data": {
+                                            "type": "object",
+                                            "example": {
+                                                "name": "Patricia Morales",
+                                                "age": 31,
+                                                "email": "patricia.morales@empresa.com",
+                                                "position": "Gerente de Proyectos",
+                                                "salary": 90000,
+                                                "annual_salary": 1080000
+                                            }
+                                        },
+                                        "concepts_demonstrated": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": [
+                                                "Constructor",
+                                                "Métodos",
+                                                "Herencia",
+                                                "Interfaz",
+                                                "Clase Abstracta",
+                                                "$this y parent::"
+                                            ]
+                                        },
+                                        "full_info": {
+                                            "type": "string",
+                                            "example": "Patricia Morales (31 años) - patricia.morales@empresa.com - Puesto: Gerente de Proyectos, Salario: $90,000.00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/oop-demo/constructor": {
+            "get": {
+                "tags": [
+                    "OOP Demo"
+                ],
+                "summary": "Demostración de Constructor",
+                "description": "Muestra cómo funciona el constructor creando un empleado real",
+                "operationId": "25a5d5dd850fe97ae1b0c5f99941c97c",
+                "responses": {
+                    "200": {
+                        "description": "Constructor ejecutado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "concept": {
+                                            "type": "string",
+                                            "example": "Constructor"
+                                        },
+                                        "employee_name": {
+                                            "type": "string",
+                                            "example": "Ana García"
+                                        },
+                                        "employee_age": {
+                                            "type": "integer",
+                                            "example": 28
+                                        },
+                                        "employee_email": {
+                                            "type": "string",
+                                            "example": "ana.garcia@empresa.com"
+                                        },
+                                        "position": {
+                                            "type": "string",
+                                            "example": "Desarrolladora Senior"
+                                        },
+                                        "salary": {
+                                            "type": "number",
+                                            "example": 75000
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Constructor inicializa todas las propiedades del objeto"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/oop-demo/method": {
+            "get": {
+                "tags": [
+                    "OOP Demo"
+                ],
+                "summary": "Demostración de Métodos",
+                "description": "Muestra diferentes tipos de métodos públicos y privados",
+                "operationId": "373b3654e479659c664b64252a921e96",
+                "responses": {
+                    "200": {
+                        "description": "Métodos ejecutados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "concept": {
+                                            "type": "string",
+                                            "example": "Método"
+                                        },
+                                        "public_methods": {
+                                            "type": "object",
+                                            "example": {
+                                                "getName": "Carlos Rodríguez",
+                                                "getPosition": "Gerente de Ventas",
+                                                "getSalary": 85000
+                                            }
+                                        },
+                                        "calculated_method": {
+                                            "type": "number",
+                                            "example": 1020000
+                                        },
+                                        "info_method": {
+                                            "type": "string",
+                                            "example": "Carlos Rodríguez (35 años) - carlos.rodriguez@empresa.com - Puesto: Gerente de Ventas, Salario: $85,000.00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/oop-demo/inheritance": {
+            "get": {
+                "tags": [
+                    "OOP Demo"
+                ],
+                "summary": "Demostración de Herencia",
+                "description": "Muestra cómo Employee hereda de Person",
+                "operationId": "6e31ec343b0ad8a719d9a90e0be2c316",
+                "responses": {
+                    "200": {
+                        "description": "Herencia demostrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "concept": {
+                                            "type": "string",
+                                            "example": "Herencia"
+                                        },
+                                        "parent_class": {
+                                            "type": "string",
+                                            "example": "Person"
+                                        },
+                                        "child_class": {
+                                            "type": "string",
+                                            "example": "Employee"
+                                        },
+                                        "inherited_properties": {
+                                            "type": "object",
+                                            "example": {
+                                                "name": "María López",
+                                                "age": 29,
+                                                "email": "maria.lopez@empresa.com"
+                                            }
+                                        },
+                                        "own_properties": {
+                                            "type": "object",
+                                            "example": {
+                                                "position": "Analista de Datos",
+                                                "salary": 65000
+                                            }
+                                        },
+                                        "extended_functionality": {
+                                            "type": "string",
+                                            "example": "Employee extiende Person agregando propiedades laborales"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/oop-demo/exception": {
+            "get": {
+                "tags": [
+                    "OOP Demo"
+                ],
+                "summary": "Demostración de Excepciones",
+                "description": "Muestra el manejo de excepciones al crear empleado con datos inválidos",
+                "operationId": "0fbb92c7542693860839fa861127a58e",
+                "responses": {
+                    "422": {
+                        "description": "Excepción capturada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "concept": {
+                                            "type": "string",
+                                            "example": "Excepción"
+                                        },
+                                        "exception_class": {
+                                            "type": "string",
+                                            "example": "InvalidEmployeeDataException"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "El salario debe ser mayor a 0"
+                                        },
+                                        "attempted_data": {
+                                            "type": "object",
+                                            "example": {
+                                                "name": "Empleado Test",
+                                                "salary": -5000
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/oop-demo/interface": {
+            "get": {
+                "tags": [
+                    "OOP Demo"
+                ],
+                "summary": "Demostración de Interfaz",
+                "description": "Muestra cómo se implementa la interfaz Identifiable",
+                "operationId": "2ea509c6129ca34bb5dbdf9d64f51b2d",
+                "responses": {
+                    "200": {
+                        "description": "Interfaz implementada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "concept": {
+                                            "type": "string",
+                                            "example": "Interfaz"
+                                        },
+                                        "interface_name": {
+                                            "type": "string",
+                                            "example": "Identifiable"
+                                        },
+                                        "required_methods": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": [
+                                                "getName()",
+                                                "getEmail()",
+                                                "getInfo()"
+                                            ]
+                                        },
+                                        "implementation_example": {
+                                            "type": "object",
+                                            "example": {
+                                                "name": "Luis Martínez",
+                                                "email": "luis.martinez@empresa.com",
+                                                "info": "Luis Martínez (32 años) - luis.martinez@empresa.com - Puesto: Arquitecto de Software, Salario: $95,000.00"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/oop-demo/abstract": {
+            "get": {
+                "tags": [
+                    "OOP Demo"
+                ],
+                "summary": "Demostración de Clase Abstracta",
+                "description": "Muestra cómo funciona la clase abstracta Person",
+                "operationId": "59bb4477c7bb4ccaff5fb2f44c8b6048",
+                "responses": {
+                    "200": {
+                        "description": "Clase abstracta demostrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "concept": {
+                                            "type": "string",
+                                            "example": "Clase Abstracta"
+                                        },
+                                        "abstract_class": {
+                                            "type": "string",
+                                            "example": "Person"
+                                        },
+                                        "concrete_class": {
+                                            "type": "string",
+                                            "example": "Employee"
+                                        },
+                                        "abstract_method": {
+                                            "type": "string",
+                                            "example": "getInfo()"
+                                        },
+                                        "concrete_methods": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": [
+                                                "getName()",
+                                                "getAge()",
+                                                "getEmail()"
+                                            ]
+                                        },
+                                        "implementation_result": {
+                                            "type": "string",
+                                            "example": "Sofía Hernández (27 años) - sofia.hernandez@empresa.com - Puesto: Diseñadora UX, Salario: $70,000.00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/oop-demo/this-parent": {
+            "get": {
+                "tags": [
+                    "OOP Demo"
+                ],
+                "summary": "Demostración de $this y parent::",
+                "description": "Muestra el uso de $this para propiedades/métodos propios y parent:: para métodos del padre",
+                "operationId": "1cf01f3dc4a2eb2e683036b95c63fc5d",
+                "responses": {
+                    "200": {
+                        "description": "$this y parent:: demostrados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "concept": {
+                                            "type": "string",
+                                            "example": "This y Parent"
+                                        },
+                                        "this_examples": {
+                                            "type": "object",
+                                            "example": {
+                                                "this_name": "Roberto García",
+                                                "this_position": "Director de TI",
+                                                "this_salary": 120000
+                                            }
+                                        },
+                                        "parent_examples": {
+                                            "type": "object",
+                                            "example": {
+                                                "parent_constructor": "Inicializa propiedades básicas de Person",
+                                                "parent_getBasicInfo": "Roberto García (45 años) - roberto.garcia@empresa.com"
+                                            }
+                                        },
+                                        "combined_result": {
+                                            "type": "string",
+                                            "example": "Roberto García (45 años) - roberto.garcia@empresa.com - Puesto: Director de TI, Salario: $120,000.00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Employee CRUD",
+            "description": "Employee CRUD"
+        },
+        {
+            "name": "OOP Demo",
+            "description": "OOP Demo"
+        }
+    ]
+}
