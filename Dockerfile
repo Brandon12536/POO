@@ -66,6 +66,7 @@ RUN echo 'user laravel;' > /etc/nginx/nginx.conf \
     && echo '            fastcgi_send_timeout 300;' >> /etc/nginx/nginx.conf \
     && echo '        }' >> /etc/nginx/nginx.conf \
     && echo '        location /health { return 200 "OK"; add_header Content-Type text/plain; }' >> /etc/nginx/nginx.conf \
+    && echo '        location /docs { alias /var/www/html/storage/api-docs; try_files $uri $uri/ =404; }' >> /etc/nginx/nginx.conf \
     && echo '        location = / { return 301 /api/documentation; }' >> /etc/nginx/nginx.conf \
     && echo '    }' >> /etc/nginx/nginx.conf \
     && echo '}' >> /etc/nginx/nginx.conf
@@ -101,10 +102,13 @@ RUN mkdir -p /run/nginx \
 # Variables de entorno por defecto
 ENV APP_ENV=production
 ENV APP_DEBUG=false
+ENV APP_NAME="Laravel OOP Supabase"
+ENV APP_URL="https://poo-yrit.onrender.com"
 ENV LOG_CHANNEL=stderr
 ENV SESSION_DRIVER=file
 ENV CACHE_STORE=file
 ENV QUEUE_CONNECTION=sync
+ENV L5_SWAGGER_GENERATE_ALWAYS=true
 
 # Exponer puerto
 EXPOSE 80
@@ -119,14 +123,19 @@ RUN echo '#!/bin/sh' > /start.sh \
     && echo 'chown -R laravel:laravel /var/www/html/bootstrap/cache' >> /start.sh \
     && echo 'chmod -R 777 /var/www/html/storage' >> /start.sh \
     && echo 'chmod -R 777 /var/www/html/bootstrap/cache' >> /start.sh \
+    && echo '# Configurar variables de entorno básicas' >> /start.sh \
+    && echo 'export APP_NAME="Laravel OOP Supabase"' >> /start.sh \
+    && echo 'export APP_URL="https://poo-yrit.onrender.com"' >> /start.sh \
     && echo '# Generar APP_KEY si no existe' >> /start.sh \
     && echo 'if [ -z "$APP_KEY" ]; then php artisan key:generate --force; fi' >> /start.sh \
     && echo '# Limpiar caches' >> /start.sh \
     && echo 'php artisan config:clear || echo "Config clear failed"' >> /start.sh \
     && echo 'php artisan cache:clear || echo "Cache clear failed"' >> /start.sh \
     && echo 'php artisan view:clear || echo "View clear failed"' >> /start.sh \
-    && echo '# Generar documentación' >> /start.sh \
-    && echo 'php artisan l5-swagger:generate || echo "Swagger generation failed"' >> /start.sh \
+    && echo '# Generar documentación Swagger' >> /start.sh \
+    && echo 'echo "📚 Generando documentación Swagger..."' >> /start.sh \
+    && echo 'php artisan l5-swagger:generate --all || echo "Swagger generation failed"' >> /start.sh \
+    && echo 'ls -la /var/www/html/storage/api-docs/ || echo "No api-docs directory"' >> /start.sh \
     && echo 'echo "✅ Laravel configurado correctamente"' >> /start.sh \
     && echo '# Iniciar servicios' >> /start.sh \
     && echo 'echo "🔧 Iniciando PHP-FPM..."' >> /start.sh \
