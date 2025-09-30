@@ -136,6 +136,12 @@ RUN echo '#!/bin/sh' > /start.sh \
     && echo '# Publicar y generar documentación Swagger' >> /start.sh \
     && echo 'echo "📚 Publicando assets de Swagger..."' >> /start.sh \
     && echo 'php artisan vendor:publish --provider="L5Swagger\\L5SwaggerServiceProvider" --force || echo "Swagger publish failed"' >> /start.sh \
+    && echo '# Configurar Swagger para usar CDN' >> /start.sh \
+    && echo 'sed -i "s|swagger-ui-bundle.js|https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui-bundle.js|g" /var/www/html/resources/views/vendor/l5-swagger/index.blade.php || echo "CDN config failed"' >> /start.sh \
+    && echo 'sed -i "s|swagger-ui-standalone-preset.js|https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui-standalone-preset.js|g" /var/www/html/resources/views/vendor/l5-swagger/index.blade.php || echo "CDN config failed"' >> /start.sh \
+    && echo 'sed -i "s|swagger-ui.css|https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui.css|g" /var/www/html/resources/views/vendor/l5-swagger/index.blade.php || echo "CDN config failed"' >> /start.sh \
+    && echo 'echo "🌐 Configurando Swagger UI para usar CDN..."' >> /start.sh \
+    && echo 'grep -n "unpkg.com" /var/www/html/resources/views/vendor/l5-swagger/index.blade.php || echo "CDN not configured"' >> /start.sh \
     && echo 'echo "📚 Generando documentación Swagger..."' >> /start.sh \
     && echo 'php artisan l5-swagger:generate --all || echo "Swagger generation failed"' >> /start.sh \
     && echo 'ls -la /var/www/html/storage/api-docs/ || echo "No api-docs directory"' >> /start.sh \
