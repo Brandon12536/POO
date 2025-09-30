@@ -3,9 +3,11 @@
 Sistema completo de gestión de empleados que demuestra **todos los conceptos de Programación Orientada a Objetos (OOP)** implementados de forma real y práctica con base de datos **Supabase** y documentación **Swagger**.
 
 ## 🌐 **Sistema Desplegado**
-**URL Local:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
+**🚀 URL Producción:** [https://poo-yrit.onrender.com](https://poo-yrit.onrender.com)
 
-**Documentación API:** [http://127.0.0.1:8000/api/documentation](http://127.0.0.1:8000/api/documentation)
+**📚 Documentación API:** [https://poo-yrit.onrender.com/swagger/](https://poo-yrit.onrender.com/swagger/)
+
+**🏠 URL Local:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 ## ✨ Características principales
 - 🏗️ **Conceptos OOP reales**: Constructor, Métodos, Herencia, Excepciones, Interfaces, Clases Abstractas, $this y parent::
