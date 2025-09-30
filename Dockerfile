@@ -67,6 +67,7 @@ RUN echo 'user laravel;' > /etc/nginx/nginx.conf \
     && echo '        }' >> /etc/nginx/nginx.conf \
     && echo '        location /health { return 200 "OK"; add_header Content-Type text/plain; }' >> /etc/nginx/nginx.conf \
     && echo '        location /docs { alias /var/www/html/storage/api-docs; try_files $uri $uri/ =404; }' >> /etc/nginx/nginx.conf \
+    && echo '        location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg)$ { expires 1y; add_header Cache-Control "public, immutable"; }' >> /etc/nginx/nginx.conf \
     && echo '        location = / { return 301 /api/documentation; }' >> /etc/nginx/nginx.conf \
     && echo '    }' >> /etc/nginx/nginx.conf \
     && echo '}' >> /etc/nginx/nginx.conf
@@ -132,10 +133,13 @@ RUN echo '#!/bin/sh' > /start.sh \
     && echo 'php artisan config:clear || echo "Config clear failed"' >> /start.sh \
     && echo 'php artisan cache:clear || echo "Cache clear failed"' >> /start.sh \
     && echo 'php artisan view:clear || echo "View clear failed"' >> /start.sh \
-    && echo '# Generar documentación Swagger' >> /start.sh \
+    && echo '# Publicar y generar documentación Swagger' >> /start.sh \
+    && echo 'echo "📚 Publicando assets de Swagger..."' >> /start.sh \
+    && echo 'php artisan vendor:publish --provider="L5Swagger\\L5SwaggerServiceProvider" --force || echo "Swagger publish failed"' >> /start.sh \
     && echo 'echo "📚 Generando documentación Swagger..."' >> /start.sh \
     && echo 'php artisan l5-swagger:generate --all || echo "Swagger generation failed"' >> /start.sh \
     && echo 'ls -la /var/www/html/storage/api-docs/ || echo "No api-docs directory"' >> /start.sh \
+    && echo 'ls -la /var/www/html/resources/views/vendor/l5-swagger/ || echo "No swagger views"' >> /start.sh \
     && echo 'echo "✅ Laravel configurado correctamente"' >> /start.sh \
     && echo '# Iniciar servicios' >> /start.sh \
     && echo 'echo "🔧 Iniciando PHP-FPM..."' >> /start.sh \
