@@ -145,7 +145,8 @@ RUN echo '#!/bin/sh' > /start.sh \
     && echo '<link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui.css" />' >> /start.sh \
     && echo '</head><body><div id="swagger-ui"></div>' >> /start.sh \
     && echo '<script src="https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui-bundle.js"></script>' >> /start.sh \
-    && echo '<script>SwaggerUIBundle({url: "/docs/api-docs.json", dom_id: "#swagger-ui", presets: [SwaggerUIBundle.presets.apis, SwaggerUIBundle.presets.standalone], layout: "StandaloneLayout"});</script>' >> /start.sh \
+    && echo '<script src="https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui-standalone-preset.js"></script>' >> /start.sh \
+    && echo '<script>SwaggerUIBundle({url: "/docs/api-docs.json", dom_id: "#swagger-ui", presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset], layout: "StandaloneLayout"});</script>' >> /start.sh \
     && echo '</body></html>' >> /start.sh \
     && echo 'EOF' >> /start.sh \
     && echo 'echo "🎨 Swagger UI standalone creado..."' >> /start.sh \
